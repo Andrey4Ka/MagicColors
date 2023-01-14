@@ -1,17 +1,17 @@
 using SceneParamsTransfering;
 using UnityEngine;
 
-public class GameSceneParams : ISceneParams
+public class GameSceneParams : BaseSceneParams
 {
-    public SceneName SceneName => SceneName.GameScene;
+    public override SceneName SceneName => SceneName.GameScene;
     public Level Level { get; }
 
-    public GameSceneParams()
+    public GameSceneParams() : base(null)
     {
         Level = Resources.LoadAll<Level>("Levels/")[0];
     }
 
-    public GameSceneParams(Level level)
+    public GameSceneParams(Level level, Save save) : base(save)
     {
         Level = level;
     }

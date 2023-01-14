@@ -12,15 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99942147402542a498376ba02fe1d57b, type: 3}
   m_Name: Level4
   m_EditorClassIdentifier: 
-  Gradient: {fileID: 21300000, guid: 3f1fd8c71bd3e3c4a82e89224cfeaa36, type: 3}
+  Number: 4
+  Gradient: {fileID: 21300000, guid: 66f2a60ee48385341a20d40e769101b8, type: 3}
   Interactables:
     gridSize: {x: 5, y: 7}
-    cellSize: {x: 16, y: 16}
+    cellSize: {x: 12, y: 12}
     cells:
-    - row: 0000000000
-    - row: 0000010000
-    - row: 0101000101
-    - row: 0101010101
-    - row: 0101000101
-    - row: 0000010000
-    - row: 0000010000
+    - row: 0100000001
+    - row: 0100000001
+    - row: 0100000001
+    - row: 0100000001
+    - row: 0100000001
+    - row: 0100000001
+    - row: 0100000001

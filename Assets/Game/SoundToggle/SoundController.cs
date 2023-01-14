@@ -13,6 +13,7 @@ public class SoundController : MonoBehaviour
 
     private const string SoundVolumeKey = "SoundVolume";
     private const string MusicVolumeKey = "MusicVolume";
+    private const string MasterVolumeKey = "MasterVolume";
 
     private void Start()
     {
@@ -23,5 +24,20 @@ public class SoundController : MonoBehaviour
 
         _soundToggle.onValueChanged.AddListener((value) => _mixer.SetFloat(SoundVolumeKey, value ? OnVolume : OffVolume));
         _musicToggle.onValueChanged.AddListener((value) => _mixer.SetFloat(MusicVolumeKey, value ? OnVolume : OffVolume));
+    }
+
+    public void HardMute()
+    {
+        HardSetActive(false);
+    }
+
+    public void HardUnmute()
+    {
+        HardSetActive(true);
+    }
+
+    private void HardSetActive(bool active)
+    {
+        _mixer.SetFloat(MasterVolumeKey, active ? OnVolume : OffVolume);
     }
 }

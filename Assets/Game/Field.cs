@@ -23,6 +23,8 @@ public class Field : MonoBehaviour
 
     private List<Cell> _activeCells = new List<Cell>();
 
+    private const int MaxShuffle = 10;
+
     public IEnumerator InitField(Level level)
     {
         _size = new IndexPosition(level.Interactables.GridSize.x, level.Interactables.GridSize.y);
@@ -67,35 +69,47 @@ public class Field : MonoBehaviour
 
     private void ShuffleCells()
     {
-        var interactabelsCells = new List<Cell>();
-        foreach (var cell in _cellsMatrix)
+        var iterate = 0;
+        do
         {
-            if (cell.Interactable)
+            iterate++;
+            var interactabelsCells = new List<Cell>();
+            foreach (var cell in _cellsMatrix)
             {
-                interactabelsCells.Add(TakeFromMatrix(cell.IndexPosition));
-            }
-        }
-
-        var count = interactabelsCells.Count;
-        while (count > 1)
-        {
-            int i = Random.Range(0, count);
-            count--;
-            (interactabelsCells[count], interactabelsCells[i]) = (interactabelsCells[i], interactabelsCells[count]);
-        }
-
-        var numerator = interactabelsCells.GetEnumerator();
-        for (int i = 0; i < _size.X; i++)
-        {
-            for (int j = 0; j < _size.Y; j++)
-            {
-                if (_cellsMatrix[i, j] == null)
+                if (cell.Interactable)
                 {
-                    numerator.MoveNext();
-                    _cellsMatrix[i, j] = numerator.Current;
-                    SetCellInIndex(_cellsMatrix[i, j], new IndexPosition(i, j));
+                    interactabelsCells.Add(TakeFromMatrix(cell.IndexPosition));
                 }
             }
+
+            var count = interactabelsCells.Count;
+            while (count > 1)
+            {
+                int i = Random.Range(0, count);
+                count--;
+                (interactabelsCells[count], interactabelsCells[i]) = (interactabelsCells[i], interactabelsCells[count]);
+            }
+
+            var numerator = interactabelsCells.GetEnumerator();
+            for (int i = 0; i < _size.X; i++)
+            {
+                for (int j = 0; j < _size.Y; j++)
+                {
+                    if (_cellsMatrix[i, j] == null)
+                    {
+                        numerator.MoveNext();
+                        _cellsMatrix[i, j] = numerator.Current;
+                        SetCellInIndex(_cellsMatrix[i, j], new IndexPosition(i, j));
+                    }
+                }
+            } 
+        }
+        while (iterate <= MaxShuffle && CheckWin());
+
+        if (CheckWin())
+        {
+            Debug.LogWarning("Не удалось перемешать поле!");
+            OnWin?.Invoke();
         }
     }
 
@@ -126,7 +140,10 @@ public class Field : MonoBehaviour
         }
 
         SetCellInIndex(cell, index);
-        CheckWin();
+        if (CheckWin())
+        {
+            OnWin?.Invoke();
+        }
     }
 
     private void SetCellInIndex(Cell cell, IndexPosition index)
@@ -134,7 +151,6 @@ public class Field : MonoBehaviour
         cell.GoTo(GetPosition(index));
         cell.IndexPosition = index;
         _cellsMatrix[cell.IndexPosition.X, cell.IndexPosition.Y] = cell;
-        Debug.Log($"{cell.IndexPosition.X} - {cell.IndexPosition.Y}");
     }
 
     private Cell TakeFromMatrix(IndexPosition index)
@@ -175,17 +191,17 @@ public class Field : MonoBehaviour
         _activeCells.Clear();
     }
 
-    private void CheckWin()
+    private bool CheckWin()
     {
         foreach (var cell in _cellsMatrix)
         {
             if (!CheckTrue(cell))
             {
-                return;
+                return false;
             }
         }
 
-        OnWin?.Invoke();
+        return true;
     }
 
     private bool CheckTrue(Cell cell)

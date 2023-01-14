@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +9,8 @@ public class LevelButton : MonoBehaviour
 
     [SerializeField] private Image _image;
     [SerializeField] private Text _levelNumber;
+    [SerializeField] private Button _button;
+    [SerializeField] private GameObject _lock;
 
     public Level Level { get; private set; }
 
@@ -26,6 +27,12 @@ public class LevelButton : MonoBehaviour
 
     public void RandomColor()
     {
-        _image.color = UnityEngine.Random.ColorHSV(0, 1, 0.5f, 0.6f, .8f, .9f ,1, 1);
+        _image.color = UnityEngine.Random.ColorHSV(0, 1, 0.5f, 0.6f, .8f, .9f, 1, 1);
+    }
+
+    public void SetOpened(bool opened)
+    {
+        _button.interactable = opened;
+        _lock.SetActive(!opened);
     }
 }

@@ -1,3 +1,4 @@
+using Game;
 using SceneParamsTransfering;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,49 +11,58 @@ public class GameController : MonoBehaviour
     [SerializeField] private HintController _hintController;
     [SerializeField] private HintButton _errorHint;
     [SerializeField] private LevelText _levelText;
+    [SerializeField] private MainSaver _mainSaver;
+    [SerializeField] private SoundController _soundController;
 
-    private GameSceneParams sceneParams;
+    private GameSceneParams _sceneParams;
+    private YandexBridge _yandexBridge;
 
     private void Awake()
     {
+        _yandexBridge = YandexBridge.Create();
         _field.OnWin += Win;
-        _nextButton.OnClick += GoNext;
+        _nextButton.OnClick += NextClickHandler;
         _menuButton.onClick.AddListener(() => GoMenu());
         _errorHint.OnDown += () => _field.ToggleErrorHint(true);
         _errorHint.OnUp += () => _field.ToggleErrorHint(false);
+        _yandexBridge.OnAdClosed += GoNext;
     }
 
     private void Start()
     {
-        sceneParams = SceneParamsTransfer.GetParams<GameSceneParams>();
-        StartCoroutine(_field.InitField(sceneParams.Level));
-        _levelText.SetLevel(sceneParams.Level.Number);
+        _sceneParams = SceneParamsTransfer.GetParams<GameSceneParams>();
+        StartCoroutine(_field.InitField(_sceneParams.Level));
+        _levelText.SetLevel(_sceneParams.Level.Number);
     }
 
     private void Win()
     {
+        _sceneParams.Save.CompletedLevel = Mathf.Max(_sceneParams.Save.CompletedLevel, _sceneParams.Level.Number);
         _hintController.SetShow(true);
         _nextButton.SetActive(true);
+        _mainSaver.Save(_sceneParams.Save);
     }
 
     private void NextClickHandler()
     {
-        //YandexBridge.ShowAd();
+        _soundController.HardMute();
+        _yandexBridge.SendShowAd();
     }
 
     private void GoNext()
     {
-        if (sceneParams.Level.NextLevel == null)
+        _soundController.HardUnmute();
+        if (_sceneParams.Level.NextLevel == null)
         {
             GoMenu();
             return;
         }
 
-        SceneParamsTransfer.LoadScene(new GameSceneParams(sceneParams.Level.NextLevel));
+        SceneParamsTransfer.LoadScene(new GameSceneParams(_sceneParams.Level.NextLevel, _sceneParams.Save));
     }
 
     private void GoMenu()
     {
-        SceneParamsTransfer.LoadScene(new LevelsSceneParams());
+        SceneParamsTransfer.LoadScene(new LevelsSceneParams(_sceneParams.Save));
     }
 }

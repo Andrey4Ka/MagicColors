@@ -1,4 +1,7 @@
 using System;
+#if UNITY_WEBGL && !UNITY_EDITOR
+using System.Runtime.InteropServices;
+#endif
 using UnityEngine;
 
 public class YandexBridge : MonoBehaviour
@@ -10,14 +13,18 @@ public class YandexBridge : MonoBehaviour
 
     public event Action OnAdClosed;
 
-    private void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
-
     public static YandexBridge Create()
     {
-        return new GameObject("JsBridge").AddComponent<YandexBridge>();
+        return new GameObject("YandexBridge").AddComponent<YandexBridge>();
+    }
+
+    public void SendShowAd()
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        ShowAd();
+#else
+        AdClosed();
+#endif
     }
 
     public void AdClosed()

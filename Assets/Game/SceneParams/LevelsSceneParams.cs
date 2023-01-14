@@ -2,11 +2,16 @@
 using System.Collections;
 using UnityEngine;
 
-public class LevelsSceneParams : ISceneParams
+public class LevelsSceneParams : BaseSceneParams
 {
-    public SceneName SceneName => SceneName.LevelsScene;
+    public override SceneName SceneName => SceneName.LevelsScene;
 
-	public LevelsSceneParams()
+	public LevelsSceneParams() : base(null)
+    {
+
+	}
+
+	public LevelsSceneParams(Save save) : base(save)
 	{
 
 	}
