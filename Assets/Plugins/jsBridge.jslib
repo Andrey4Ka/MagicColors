@@ -6,22 +6,22 @@ mergeInto(LibraryManager.library, {
     },
 
     PrefsSetInt: function (key, value) {
-        let stringKey = UTF8toString(key);
+        let stringKey = UTF8ToString(key);
         if (window.player == null || window.playerData == null) {
             return;
         }
 
-        window.player.setData({stringKey, value}).then(console.log('data is set')).catch(err => console.log('data is not set: ' + err));
+        window.player.setData({[stringKey]: value}).then(console.log('data is set')).catch(err => console.log('data is not set: ' + err));
     },
 
     PrefsGetInt: function (key, defaultValue) {
-        let stringKey = UTF8toString(key);
+        let stringKey = UTF8ToString(key);
         if (window.playerData == null) {
             console.log("Null! Returned default");
             return defaultValue;
         }
 
-        if (stringKey in window.playerData){
+        if (window.playerData[stringKey] != null){
             console.log("Returned value");
             return window.playerData[stringKey];
         }

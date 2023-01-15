@@ -59,7 +59,9 @@
 
       function getPlayerData(){        
         ysdk.getPlayer().then(_player => {
+          window.player = _player;
           _player.getData().then(data => {
+            console.log(data);
             window.playerData = data;
             console.log("Success get player");
           });

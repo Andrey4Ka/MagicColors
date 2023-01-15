@@ -20,6 +20,11 @@ public class BgColor : MonoBehaviour
     private void FixedUpdate()
     {
         _hue += Time.deltaTime * _speed;
+        if (_hue > 1)
+        {
+            _hue = 0;
+        }
+
         SetColor();
     }
 
