@@ -15,6 +15,11 @@ public class SpriteToggle : MonoBehaviour
         _toggle.onValueChanged.AddListener(ToggleSprite);
     }
 
+    private void Start()
+    {
+        ToggleSprite(_toggle.isOn);
+    }
+
     private void ToggleSprite(bool value)
     {
         ((Image)_toggle.targetGraphic).sprite = value ? _on : _off;

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(DragAndDropHandler), typeof(Image), typeof(RectTransform))]
+[RequireComponent(typeof(DragAndDropHandler), typeof(RectTransform))]
 [RequireComponent(typeof(Canvas))]
 public class Cell : MonoBehaviour
 {
@@ -21,19 +21,18 @@ public class Cell : MonoBehaviour
     [SerializeField] private bool _interactable;
 
     [Space]
+    [SerializeField] private Image _image;
     [SerializeField] private GameObject _cross;
     [SerializeField] private GameObject _error;
     [SerializeField] private AudioSource _pickSound;
 
     private RectTransform _rectTransform;
     private Canvas _canvas;
-    private Image _image;
 
     private void Awake()
     {
         _rectTransform = GetComponent<RectTransform>();
         _canvas = GetComponent<Canvas>();
-        _image = GetComponent<Image>();
         DragAndDrop = GetComponent<DragAndDropHandler>();
         DragAndDrop.OnDrag += () => SetLayer(CellLayer.Source);
         DragAndDrop.OnDrop += PlayPick;
@@ -44,7 +43,6 @@ public class Cell : MonoBehaviour
         _rectTransform.sizeDelta = size;
     }
 
-    [ContextMenu("TakeColor")]
     public void TakeColor(Sprite gradient)
     {
         var texture = gradient.texture;
@@ -84,6 +82,13 @@ public class Cell : MonoBehaviour
     private void OnValidate()
     {
         SetInteractable(_interactable);
+    }
+
+    [ContextMenu("TakeColor")]
+    private void TakeColor()
+    {
+        _rectTransform = GetComponent<RectTransform>();
+        TakeColor(GetComponentInParent<Image>().sprite);
     }
     #endif
 }

@@ -33,6 +33,8 @@ public class LevelButton : MonoBehaviour
     public void SetOpened(bool opened)
     {
         _button.interactable = opened;
+        _image.gameObject.SetActive(opened);
+        //_levelNumber.gameObject.SetActive(opened);
         _lock.SetActive(!opened);
     }
 }

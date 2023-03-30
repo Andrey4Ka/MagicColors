@@ -53,3 +53,6 @@ TagManager:
   - name: UI_WinWindow
     uniqueID: 434260095
     locked: 0
+  - name: UI_Pause
+    uniqueID: 3620233933
+    locked: 0
